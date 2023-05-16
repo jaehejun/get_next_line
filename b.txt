@@ -1,0 +1,6 @@
+read() attempts to read nbyte bytes of data from the object referenced by
+     the descriptor fildes into the buffer pointed to by buf.\n  readv() per-
+     forms the same action, but scatters the input data into the iovcnt
+     buffers specified by the members of the iov array: iov[0], iov[1], ...,
+     iov[iovcnt-1].\n  pread() performs the same function, but reads from the
+     specified position in the file without modifying the file pointer.\n
