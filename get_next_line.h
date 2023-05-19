@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:16 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/05/18 22:51:21 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/05/19 23:13:32 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 100
+#  define BUFFER_SIZE 5
 # endif
 
 # include <stdlib.h>
 # include <unistd.h>
 
 char	*get_next_line(int fd);
+char	*extract_line(char *buffer, size_t count);
+
 
 #endif
