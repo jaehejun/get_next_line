@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/05/19 23:28:27 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/06/05 23:16:41 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,15 @@
 #include <fcntl.h>
 #include <string.h>
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
+//size_t	ft_strlen(const char *s)
+//{
+//	size_t	i;
 
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
-}
+//	i = 0;
+//	while (s[i] != '\0')
+//		i++;
+//	return (i);
+//}
 
 //char	*ft_strchr(const char *s, int c)
 //{
@@ -78,49 +78,74 @@ size_t	ft_strlen(const char *s)
 //}
 
 
-char	*extract_line(char *buffer, size_t count)
-{
-	static char	*remain;
-	char		*line;
+//char	*extract_line(char *buffer, size_t count)
+//{
+//	char		*line;
+//	static char	*remain;
+//	int			i;
 
-	line = malloc(count + 1);
-	if (line == NULL)
-		return (NULL);
-	line[count] = '\0';
-	printf("%zu\n", count);
-	while (*buffer != '\0')
-	{
-		*line++ = *buffer++;
-		if (*(buffer - 1) == '\n')
-			break ;
-		printf("%s", line);
-	}
-	printf("%s\n", line);
-	while (*buffer != '\0')
-		*remain++ = *buffer++;
-	printf("%s\n", buffer);
-	printf("%s\n", remain);
-	return (line);
-}
+//	line = malloc(count + 1);
+//	if (line == NULL)
+//		return (NULL);
+//	line[count] = '\0';
+//	while (*buffer != '\0')
+//	{
+//		*line++ = *buffer++;
+//		if (*buffer == '\n')
+//		{
+//			*line = '\n';
+//			*(line + 1) = '\0';
+//			printf("%s", line);
+//			break ;
+//		}
+//	}
+//	printf("%s", line);
+//	while (*buffer != '\0')
+//		*remain++ = *buffer++;
+//	*remain = '\0';
+//	printf("%s\n", remain);
+//	return (line);
+//}
 
 char	*get_next_line(int fd)
 {
 	char		*buffer;
 	char		*line;
-	char		*new_line;
+	//char		*new_line;
 	static char	*remain;
 	int			count;
+	int			i;
 
+	i = -1;
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (buffer == NULL)
 		return (NULL);
 	count = read(fd, buffer, BUFFER_SIZE);
 	if (count == -1 || count == 0)
 		return (NULL);
-	buffer[count] = '\0';
-	printf("%s", buffer);
-	line = extract_line(buffer, count);
-	
+	buffer[BUFFER_SIZE] = '\0';
+	line = malloc(count + 1);
+	if (line == NULL)
+		return (NULL);
+	line[count] = '\0';
+	while (buffer[++i] != '\0')
+	{
+		line[i] = buffer[i];
+		printf("%c", line[i]);
+		printf("%c", buffer[i]);
+		if (buffer[i] == '\n')
+		{
+			line[i] = buffer[i];
+			break ;
+		}
+	}
+	line[i + 1] = '\0';
+	printf("%p", remain);
+	//while (buffer[i] != '\0')
+	//	*(remain++) = buffer[i++];
+	//*remain = '\0';
+	printf("%s", line);
+	//printf("%s", remain);
 	
 	
 	return (line);
@@ -129,10 +154,11 @@ char	*get_next_line(int fd)
 int	main(void)
 {
 	int		fd;
-	int		count;
-	char	*line = "";
+	//int		count;
+	//char	*line = "";
 	
 	fd = open("a.txt", O_RDONLY);
-	//while (line != NULL)
-	printf("%s", line = get_next_line(fd));
+	//while (line != NULL) 
+	//printf("%s", line = get_next_line(fd));
+	get_next_line(fd);
 }
