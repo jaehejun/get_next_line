@@ -59,26 +59,26 @@ char	*ft_strdup(const char *s1)
 	return (dup);
 }
 
-//char	*ft_strtrim(char const *s1, char const *set)
-//{
-//	char	*trimmed;
-//	size_t	start;
-//	size_t	end;
+char	*ft_strtrim(char const *s1, char const *set)
+{
+	char	*trimmed;
+	size_t	start;
+	size_t	end;
 
-//	start = 0;
-//	end = ft_strlen(s1);
-//	while (ft_strchr(set, s1[start]) != 0 && start < end)
-//		start++;
-//	while (ft_strchr(set, s1[end]) != 0 && end > 0)
-//		end--;
-//	if (start > end)
-//		return (ft_strdup(""));
-//	trimmed = (char *)malloc(sizeof(char) * (end - start + 2));
-//	if (!trimmed)
-//		return (NULL);
-//	ft_strlcpy(trimmed, s1 + start, end - start + 2);
-//	return (trimmed);
-//}
+	start = 0;
+	end = ft_strlen(s1);
+	while (ft_strchr(set, s1[start]) != 0 && start < end)
+		start++;
+	while (ft_strchr(set, s1[end]) != 0 && end > 0)
+		end--;
+	if (start > end)
+		return (ft_strdup(""));
+	trimmed = (char *)malloc(sizeof(char) * (end - start + 2));
+	if (!trimmed)
+		return (NULL);
+	ft_strlcpy(trimmed, s1 + start, end - start + 2);
+	return (trimmed);
+}
 
  char	*ft_strjoin(char const *s1, char const *s2)
  {
@@ -164,6 +164,10 @@ char	*get_next_line(int fd)
 	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
 		return (NULL);
+	if (backup[fd] == 0)
+		backup[fd] = ft_strdup("");
+	if (backup[fd] == NULL)
+		return (NULL);
 	read_size = 1;
 	while (read_size != 0 && ft_strchr(backup[fd], '\n') == 0)
 	{
@@ -186,18 +190,20 @@ char	*get_next_line(int fd)
  {
  	char	*line;
  	int		fd;
+	int		n = 1;
 
  	fd = open("test.txt", O_RDONLY);
 	if (fd == -1)
 		printf("error");
 	else
 		printf("%d\n", fd);
-	printf("opened");
+	printf("opened\n");
  	while (1)
  	{
  		line = get_next_line(fd);
  		if (!line)
  			break ;
+		printf("line%d: ", n++);
  		printf("%s\n", line);
  		free(line);
  	}
