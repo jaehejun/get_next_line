@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <string.h>
-#define BUFFER_SIZE 10
+#define BUFFER_SIZE 1
 #define OPEN_MAX 256
 
 size_t	ft_strlen(const char *s)
@@ -80,21 +80,21 @@ char	*ft_strtrim(char const *s1, char const *set)
 	return (trimmed);
 }
 
- char	*ft_strjoin(char const *s1, char const *s2)
- {
- 	char	*joined;
- 	size_t	s1_len;
- 	size_t	s2_len;
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*joined;
+	size_t	s1_len;
+	size_t	s2_len;
 
- 	s1_len = ft_strlen(s1);
- 	s2_len = ft_strlen(s2);
- 	joined = (char *)malloc(sizeof(char) * (s1_len + s2_len + 1));
- 	if (!joined)
- 		return (NULL);
- 	ft_strlcpy(joined, s1, s1_len + 1);
- 	ft_strlcpy(joined + s1_len, s2, s2_len + 1);
- 	return (joined);
- }
+	s1_len = ft_strlen(s1);
+	s2_len = ft_strlen(s2);
+	joined = (char *)malloc(sizeof(char) * (s1_len + s2_len + 1));
+	if (!joined)
+		return (NULL);
+	ft_strlcpy(joined, s1, s1_len + 1);
+	ft_strlcpy(joined + s1_len, s2, s2_len + 1);
+	return (joined);
+}
 
  char	*ft_substr(char const *s, unsigned int start, size_t len)
  {
