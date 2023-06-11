@@ -15,6 +15,21 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
+char	*ft_strdup(const char *s1)
+{
+	char	*copy;
+	size_t	memsize;
+
+	memsize = ft_strlen(s1);
+	copy = (char *)malloc(sizeof(char) * (memsize + 1));
+	if (copy == 0)
+		return (NULL);
+	while (*s1 != '\0')
+		*copy++ = *s1++;
+	*copy = '\0';
+	return (copy - memsize);
+}
+
 char	*ft_strchr(const char *s, char c)
 {
 	size_t	len;
@@ -62,28 +77,25 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)	// fd할당 잘못되었거나 버퍼사이즈가 0이하면 NULL
 		return (NULL);
-	if (line == NULL)	//line이 NULL이면 초기화가 잘 되었다는 뜻
-	{
-		line = (char *)malloc(sizeof(char) * 1);
-		if (line == NULL)
-			return (NULL);
-		*line = '\0';		// line을 사용하기 위해 빈문자열을 만들어 주소값을 할당해준다.
-	}
+	if (line == 0)
+		line = ft_strdup("");	// line을 사용하기 위해 빈문자열을 만들어 주소값을 할당해준다.
+	if (line == NULL)
+		return (NULL);
 	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));	//버퍼사이즈+1(널자리)만큼 동적할당
 	if (buffer == NULL)
-		return (NULL);		//널가드
+		return (NULL);
 	buffer[BUFFER_SIZE] = '\0';		// +1한 자리에 널문자 넣어서 문자열의 끝을 알린다.
 	count = 1;						// read한 문자의 갯수를 파악하기 위해 1을 넣어둔다.
 	while ((count = read(fd, buffer, BUFFER_SIZE)) != 0)	// read성공해서 1개라도 읽으면 0이 되지않는다.
 	{
+		printf("buffer : %s\n", buffer);
+		printf("line : %s\n", line);
 		buffer[count] = '\0';	// 버퍼사이즈보다 count가 작을수도 있어서 널문자로 문자열의 끝을 알린다.
-		line = ft_strjoin(line, buffer);	// line에 버퍼를 이어붙인다.
+		before_next = ft_strjoin(line, buffer);	// before_next에 line + buffer
 		if (ft_strchr(line, '\n'))			// 라인에서 개행문자가 발견되면 반복문을 종료한다.
 			break ;					
 											// EOF를 만나거나 EOF만나기 전에 개행문자를 만나면 반복문 종료.
 	}
-	printf("buffer : %s\n", buffer);
-	printf("line : %s\n", line);
 	if (count == 0)		// EOF를 만났을 때 count가 0이 되므로 NULL반환하고 종료
 		return (NULL);
 	i = -1;
@@ -113,7 +125,7 @@ char	*get_next_line(int fd)
 int	main(void)
 {
 	int		fd;
-	char	*line;
+	char	*gnl;
 	int		n;
 
 	n = 1;
@@ -122,12 +134,12 @@ int	main(void)
 		printf("error\n");
 	while (1)
 	{
-		line = get_next_line(fd);
-		if (line == NULL)
+		gnl = get_next_line(fd);
+		if (gnl == NULL)
 			break ;
-		printf("line%d: %s", n, line);
+		printf("line%d: %s", n, gnl);
 		printf("------------------------Cycle %d DONE------------------------\n", n++);
-		free(line);
+		free(gnl);
 	}
 	close(fd);
 	return (0);
