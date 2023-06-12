@@ -6,204 +6,107 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/06/08 14:19:19 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/06/12 19:53:33 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
-#include <fcntl.h>
-#include <string.h>
-
-size_t	ft_strlen(const char *s)
+char	*before_next(char *str)
 {
-	size_t	i;
-
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
-}
-
-//char	*ft_strchr(const char *s, int c)
-//{
-//	size_t	len;
-
-//	len = ft_strlen(s) + 1;
-//	while (len-- > 0)
-//	{
-//		if (*s == (char)c)
-//			return ((char *)s);
-//		s++;
-//	}
-//	return (NULL);
-//}
-
-//size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
-//{
-//	int		check_space;
-//	size_t	src_len;
-
-//	src_len = ft_strlen(src);
-//	check_space = 0;
-//	if (dstsize != 0)
-//		check_space = 1;
-//	while (*src != '\0' && dstsize-- > 1)
-//		*dst++ = *src++;
-//	if (check_space == 1)
-//		*dst = '\0';
-//	return (src_len);
-//}
-
-//char	*ft_strtrim(char const *s1, char const *set)
-//{
-//	char	*trimmed;
-//	size_t	start;
-//	size_t	end;
-
-//	start = 0;
-//	end = ft_strlen(s1);
-//	while (ft_strchr(set, s1[start]) != 0 && start < end)
-//		start++;
-//	while (ft_strchr(set, s1[end]) != 0 && end > 0)
-//		end--;
-//	if (start >= ft_strlen(s1))
-//		trimmed = (char *)malloc(sizeof(char) * 1);
-//	else
-//		trimmed = (char *)malloc(sizeof(char) * (end - start + 2));
-//	if (trimmed == 0)
-//		return (NULL);
-//	ft_strlcpy(trimmed, s1 + start, end - start + 2);
-//	return (trimmed);
-//}
-
-
-//char	*extract_line(char *buffer, size_t count)
-//{
-//	char		*line;
-//	static char	*remain;
-//	int			i;
-
-//	line = malloc(count + 1);
-//	if (line == NULL)
-//		return (NULL);
-//	line[count] = '\0';
-//	while (*buffer != '\0')
-//	{
-//		*line++ = *buffer++;
-//		if (*buffer == '\n')
-//		{
-//			*line = '\n';
-//			*(line + 1) = '\0';
-//			printf("%s", line);
-//			break ;
-//		}
-//	}
-//	printf("%s", line);
-//	while (*buffer != '\0')
-//		*remain++ = *buffer++;
-//	*remain = '\0';
-//	printf("%s\n", remain);
-//	return (line);
-//}
-
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*join;
-	size_t	len1;
-	size_t	len2;
+	char	*before;
 	int		i;
-
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	join = (char *)malloc(sizeof(char) * (len1 + len2 + 1));
-	if (join == 0)
+		before = (char *)malloc(sizeof(char) * ft_strlen(str));
+	if (before == NULL)
 		return (NULL);
 	i = 0;
-	while (len1-- > 0)
-		join[i++] = *s1++;
-	while (len2-- > 0)
-		join[i++] = *s2++;
-	join[i] = '\0';
-	return (join);
+	while (str[i] != '\0' && str[i] != '\n')
+		before[i++] = *str++;
+	before[i] = '\n';
+	before[i + 1] = '\0';
+	return (before);
+}
+
+char	*after_next(char *str)
+{
+	char	*after;
+	int		i;
+	after = (char *)malloc(sizeof(char) * ft_strlen(str));
+	if (after == NULL)
+		return (NULL);
+	while (str[i] != '\0')
+		after[i++] = *str++;
+	after[i] = '\0';
+	return (after);
 }
 
 char	*get_next_line(int fd)
 {
 	char		*buffer;
-	char		*line;
-	char		*new_line;
-	static char	*remain;
+	char		*remain;
+	static char	*line;
 	int			count;
 	int			i;
 	int			j;
+	int			w = 1;
 
-	
-	
-	i = -1;
-	j = 0;
-	buffer = malloc(BUFFER_SIZE + 1);
+	if (fd < 0 || BUFFER_SIZE <= 0)	// fd할당 잘못되었거나 버퍼사이즈가 0이하면 NULL
+		return (NULL);
+	if (line == 0)	// static char *line이 0초기화가 잘 되었다면
+		line = ft_strdup("");	// line을 사용하기 위해 빈문자열을 만들어 주소값을 할당해준다.
+	if (line == NULL)
+		return (NULL);	// strdup이 실패해 NULL을 반환했다면 널가드
+	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));	//버퍼사이즈+1(널자리)만큼 동적할당
 	if (buffer == NULL)
 		return (NULL);
-	count = read(fd, buffer, BUFFER_SIZE);
-	
-	if (count == -1 || count == 0)
-		return (NULL);
-		
-	buffer[BUFFER_SIZE] = '\0';
-	
-	line = malloc(count + 1);
-	if (line == NULL)
-		return (NULL);
-	line[count] = '\0';
-		
-	while (buffer[++i] != '\0')
+	buffer[BUFFER_SIZE] = '\0';		// +1한 자리에 널문자 넣어서 문자열의 끝을 알린다.
+	count = 1;						// read한 문자의 갯수를 파악하기 위해 1을 넣어둔다.
+	while (count != 0 && ft_strchr(line, '\n') == NULL)	// read가 EOF를 만나거나 복사된 line에 '\n'이 남아있다면 반복종료
 	{
-		line[i] = buffer[i];
-		if (buffer[i] == '\n')
-		{
-			line[i] = buffer[i];
+		count = read(fd, buffer, BUFFER_SIZE);
+		buffer[count] = '\0';	// 버퍼사이즈보다 count가 작을수도 있어서 널문자로 문자열의 끝을 알린다.
+		line = ft_strjoin(line, buffer);	// line에 line + buffer
+		if (ft_strchr(line, '\0'))
+			printf("line got '\\0'\n");
+		printf("count:  %d\n", count);
+		printf("buffer : %s\n", buffer);
+		printf("%d line: %s\n", w++, line);
+		if (line == NULL)
+			return (NULL);
+		if (ft_strchr(line, '\0') != NULL)
 			break ;
-		}
 	}
-	i++;
-	line[i] = '\0';
-	
-	remain = malloc(BUFFER_SIZE + 1);
-	if (remain == NULL)
-		return (NULL);
-		
-	while (buffer[i] != '\0')
-		remain[j++] = buffer[i++];
-	remain[j] = '\0';
-	
-	new_line = malloc(BUFFER_SIZE + 1);
-	if (new_line == NULL)
-		return (NULL);
-	ft_strjoin(new_line, remain); printf("new_line : %s\n", new_line);
-	printf("line : %s\n", line);
-	printf("remain : %s\n", remain);
-
-	return (line);
+	printf("after while");
+	line = before_next(line);
+	remain = after_next(line);
+	//printf("line: %s\n", line);
+	//printf("remain: %s\n", remain);
+	return (line);		// 처음 만나는 개행까지(개행포함)반환한다.
 }
+
+
+// line1이 개행까지 끊어서 출력되는데 계속 line1을 가지고 있음
+// line1을 초기화하고 다음 개행까지 before next라인에 넣는걸 반복문 안에 넣어서 돌려야 할 것 같다.
+// 버퍼사이즈가 1일때도 계속 첫줄(개행전까지)만 가지고 있음
 
 int	main(void)
 {
 	int		fd;
-	//int		count;
-	//char	*line = "";
-	
-	fd = open("a.txt", O_RDONLY);
-	//while (line != NULL) 
-	//printf("%s", line = get_next_line(fd));
-	printf("1st\n");
-	get_next_line(fd);
-	printf("2nd\n");
-	get_next_line(fd);
-	printf("3rd\n");
-	get_next_line(fd);
-	printf("4th\n");
-	get_next_line(fd);
-	printf("5th\n");
-	get_next_line(fd);
+	char	*gnl;
+	int		n;
+
+	n = 1;
+	fd = open("test.txt", O_RDONLY);
+	if (fd == -1)
+		printf("error\n");
+	while (1)
+	{
+		gnl = get_next_line(fd);
+		if (gnl == NULL)
+			break ;
+		//printf("line%d: %s", n, gnl);
+		//printf("------------------------Cycle %d DONE------------------------\n", n++);
+		free(gnl);
+	}
+	close(fd);
+	return (0);
 }

@@ -1,9 +1,3 @@
 a
 b
 c
-d
-e
-f
-ghijk
-lmnop
-01234
