@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/06/12 22:51:22 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/06/14 17:10:24 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,10 @@ char	*before_next(char *line)
 	while (line[i] != '\0')
 	{
 		before[i++] = *(line++);
-		printf("beforeLINE++ 주소: %p\n", line);
 		if (*(line - 1) == '\n')
 			break;
 	}
 	before[i] = '\0';
-	printf("before: %s\n", before);
-	printf("반환전 beforeLINE++ 주소: %p\n", line);
 	return (before);
 }
 
@@ -40,17 +37,13 @@ char	*after_next(char *line)
 	if (after == NULL)
 		return (NULL);
 	i = 0;
-	printf("개행 다음 line: %s\n", line);
 	while (*line != '\0' && *(line - 1) != '\n')
 		line++;
 	while (*line !='\0')
 	{
 		after[i++] = *(line++);
-		printf("afterLINE++ 주소: %p\n", line);
 	}
 	after[i] = '\0';
-	printf("after: %s\n", after);
-	printf("반환전 afterLINE++ 주소: %p\n", line);
 	return (after);
 }
 
@@ -58,6 +51,7 @@ char	*get_next_line(int fd)
 {
 	char		*buffer;
 	char		*remain;
+	char		*temp;
 	static char	*line;
 	int			count;
 	int			w = 1;
@@ -76,16 +70,13 @@ char	*get_next_line(int fd)
 	while (count != 0 && ft_strchr(line, '\n') == NULL)	// read가 EOF를 만나거나 복사된 line에 '\n'이 남아있다면 반복종료
 	{
 		count = read(fd, buffer, BUFFER_SIZE);
-		//if (count == -1)
-		//{
-		//	free(buffer);
-		//	return (NULL);
-		//}
+		if (count <= 0)
+		{
+			free(buffer);
+			return (NULL);
+		}
 		buffer[count] = '\0';	// 버퍼사이즈보다 count가 작을수도 있어서 널문자로 문자열의 끝을 알린다.
 		line = ft_strjoin(line, buffer);	// line에 line + buffer
-		printf("count:  %d\n", count);
-		printf("buffer : %s\n", buffer);
-		printf("%d line: %s\n", w++, line);
 		if (line == NULL)
 			return (NULL);
 		if (ft_strchr(line, '\0') != NULL)
@@ -93,13 +84,13 @@ char	*get_next_line(int fd)
 	}
 	if (count == 0)
 		return (NULL);
-	printf("before line 주소: %p\n", line);
-	line = before_next(line);
-	printf("AFTER before 주소: %p\n", line);
+	printf("FIRST LINE: %s\n", line);
+	temp = before_next(line);
+	printf("%s\n", temp);
 	remain = after_next(line);				// line이 개행까지만 잘린 상태라 after 불가하다
-	printf("AFTER after 주소: %p\n", line);
-	printf("line: %s\n", line);
-	printf("remain: %s\n", remain);
+	printf("%s\n", remain);
+	line = temp;
+	printf("%s\n", line);
 	return (line);		// 처음 만나는 개행까지(개행포함)반환한다.
 }
 
@@ -127,11 +118,14 @@ int	main(void)
 	//	//printf("------------------------Cycle %d DONE------------------------\n", n++);
 	//	free(gnl);
 	//}
-	gnl = get_next_line(fd);
-	gnl = get_next_line(fd);
-	gnl = get_next_line(fd);
-	gnl = get_next_line(fd);
-	gnl = get_next_line(fd);
+	printf("MAIN LINE%d: %s\n", n++, gnl = get_next_line(fd));
+	printf("MAIN LINE%d: %s\n", n++, gnl = get_next_line(fd));
+	printf("MAIN LINE%d: %s\n", n++, gnl = get_next_line(fd));
+	printf("MAIN LINE%d: %s\n", n++, gnl = get_next_line(fd));
+	//gnl = get_next_line(fd);
+	//gnl = get_next_line(fd);
+	//gnl = get_next_line(fd);
+	//gnl = get_next_line(fd);
 	
 	close(fd);
 	return (0);
