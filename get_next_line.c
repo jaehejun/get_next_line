@@ -6,11 +6,12 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/06/14 17:10:24 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/06/16 21:50:22 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
 char	*before_next(char *line)
 {
 	char	*before;
