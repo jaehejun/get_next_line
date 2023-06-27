@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 13:47:20 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/06/18 21:14:13 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/06/27 17:06:36 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,3 +61,77 @@ int	main(void)
 	close(fd);
 	return 0;
 }
+
+
+abc \n de \n f	//8
+\n ghijk \n l	//8
+mn \n opqr		//7
+
+<remain : NULL>
+read 1 : buffer = abc \n de \n f
+if (temp == NULL && remain == NULL)
+	return (NULL);
+
+if (strchr(remain, '\n') == NULL)
+before(buffer) = abc \n -> line = abc \n
+after(buffer) = de \n f -> remain = de \n f
+return (line = abc \n)
+
+<remain : de \n f>
+if (temp == NULL && remain == NULL)
+	return (NULL);
+//if (strchr(remain, '\n') == NULL)
+//read 2 : buffer = \n ghijk \n l
+else if (strchr(remain, '\n') == TRUE)
+before(remain) = de \n -> line = de \n
+after(remain) = f -> remain = f
+return (line = de \n)
+
+<remain : f>
+if (temp == NULL && remain == NULL)
+	return (NULL);
+if (strchr(remain, '\n') == NULL)
+read 2 : buffer = \n ghijk \n l
+
+before(buffer) = \n -> strjoin(remain, before(buffer)) = f \n -> line = f \n
+after(buffer) = ghijk \n l -> remain = ghijk \n l
+return (line = f \n)
+//else if (strchr(remain, '\n') == TRUE)
+
+<remain : ghijk \n l>
+if (temp == NULL && remain == NULL)
+	return (NULL);
+if (strchr(remain, '\n') == NULL)
+read 3 : buffer = mn \n opqr
+else if (strchr(remain, '\n') == TRUE)
+before(remain) = ghijk \n -> line = ghijk \n
+after(remain) = l -> remain = l
+return (line = ghijk \n)
+
+<remain : l>
+if (temp == NULL && remain == NULL)
+	return (NULL);
+if (strchr(remain, '\n') == NULL)
+read 3 : buffer = mn \n opqr
+//else if (strchr(remain, '\n') == TRUE)
+before(buffer) = mn \n -> strjoin(remain, before(buffer)) = l mn \n -> line = l mn \n
+after(buffer) = opqr -> remain = opqr
+return (line = l mn \n)
+
+<remain : opqr>
+if (temp == NULL && remain == NULL)
+	return (NULL);
+if (strchr(remain, '\n') == NULL)
+read 4 : buffer = \0
+
+if (buffer == \0 && remain == \0)
+return (NULL);
+
+before(buffer) = opqr -> strjoin(remain, before(buffer)) = opqr -> line = opqr
+after(buffer) = \0 -> remain = \0
+return (line = opqr)
+//else if (strchr(remain, '\n') == TRUE)
+
+<remain : \0>
+if (temp == NULL && remain == NULL)
+	return (NULL);
