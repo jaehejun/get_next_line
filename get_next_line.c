@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/06/27 21:10:42 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/06/30 22:14:16 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,19 +72,16 @@ char	*get_next_line(int fd)
 {
 	static int	i = 1;
 	char		*line;
-	//char		*temp;
 	static char	*remain;		// remain = 0x0
 
 	line = ft_strdup("");		// line = ""
 	if (remain == NULL)			// remain이 0x0일때만 실행해서 remain의 값을 유지한다.
 		remain = ft_strdup("");		// remain = ""
-	printf("81 REMAIN %d: %s\n", i++, remain);
-	//temp = ft_strdup("");		// temp = ""
-	//remain = read_line(fd, remain);	// remain = abc\nde\nf
-	//printf("temp : %s\n", temp);
+	printf("80 REMAIN %d: %s\n", i++, remain);
+
 	while (ft_strchr(remain, '\n') == NULL && remain != NULL)
 	{
-		printf("NO\\n\n");
+		printf("NO\\n -> read_line\n");
 		line = ft_strjoin(line, remain);	// line = abc\nde\nf
 		if (line == NULL)
 			return (NULL);
@@ -95,8 +92,6 @@ char	*get_next_line(int fd)
 	if (ft_strchr(remain, '\n') != NULL || remain == NULL)		// remain = abc\nde\nf
 	{
 		printf("got\\n\n");
-		//temp = before(remain);
-		//printf("temp : %s\n", temp);
 		line = ft_strjoin(line, before(remain));	// line = abc\n
 		printf("99 line : %s\n", line);
 		remain = after(remain);	// remain = de\nf
