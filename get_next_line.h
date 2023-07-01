@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:16 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/06/27 19:31:44 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/01 21:41:59 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
+# include <string.h>
 # include <fcntl.h>
 
 size_t	ft_strlen(const char *s);
@@ -28,7 +29,8 @@ char	*ft_strchr(const char *s, char c);
 char	*ft_strjoin(char const *s1, char const *s2);
 
 char	*get_next_line(int fd);
-char	*after(char *str);
-char	*before(char *str);
+char	*read_line(int fd, char *buffer, char *remain);
+char	*until_newline(char *str);
+char	*after_newline(char *str);
 
 #endif

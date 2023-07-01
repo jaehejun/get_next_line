@@ -4,3 +4,12 @@ f
 ghijk
 lmn
 opqr
+
+
+abc\n -def'\n'gh-
+
+buffer f'\n'gh
+
+remain: -def'\n'gh-
+
+line == remain == opqr'\0'

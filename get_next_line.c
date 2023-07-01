@@ -6,120 +6,123 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/06/30 22:14:16 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/01 22:02:52 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*before(char *str)
+void	free_remain(char *remain)
+{
+	free(remain);
+	remain = NULL;
+}
+
+char	*until_newline(char *str)
 {
 	char	*before;
-	int		i = 0;
+	int		i;
+	int		len;
 
-	before = malloc(BUFFER_SIZE + 1);
-	before[BUFFER_SIZE] = '\0';
-	while (*str != '\0' && *str != '\n')
+	len = 0;
+	while (str[len] != '\0')
+	{
+		len++;
+		if (str[len] == '\n')
+			break;
+	}
+	before = (char *)malloc(sizeof(char) * (len + 2));
+	if (before == NULL)
+		return (NULL);
+	before[len + 2] = '\0';
+	i = 0;
+	while (*str != '\0')
 	{
 		before[i++] = *str++;
-		if (*str == '\n')
+		if (*(str - 1) == '\n')
 			break ;
 	}
-	before[i] = '\n';
-	before[i+1] = '\0';
 	return (before);
 }
 
-char	*after(char *str)
+char	*after_newline(char *str)
 {
 	char	*after;
-	int		i = 0;
-	after = malloc(BUFFER_SIZE + 1);
-	after[BUFFER_SIZE] = '\0';
-	while (*str != '\0')
+	int		len;
+
+	len = 0;
+	while (str[len] != '\0')
 	{
-		str++;
-		if (*str == '\n')
-			break ;
+		len++;
+		if (str[len] == '\n')
+			break;
 	}
-	str++;
-	while (*str != '\0')
-		after[i++] = *str++;
-	after[i] = '\0';
+	after = ft_strdup(&str[len + 1]);
+	if (after == NULL)
+		return (NULL);
 	return (after);
 }
 
-char	*read_line(int fd, char *remain)
+char	*read_line(int fd, char *buffer, char *remain)
 {
-	char	*buffer;
-	int		count;
+	int	count;
 	
-	if (remain != NULL)
+	while (ft_strchr(remain, '\n') == NULL)
 	{
-		buffer = (char *)malloc(sizeof(char)*BUFFER_SIZE + 1);
-		if (buffer == NULL)
-			return (NULL);
 		count = read(fd, buffer, BUFFER_SIZE);
-		if (count <= 0)
+		if (count == -1)
+		{
+			free(remain);
+			remain = NULL;
 			return (NULL);
-		buffer[count] = '\0';
+		}
+		if (count == 0)
+			return (NULL);
+		else
+		{
+			char *temp = remain;
+			remain = ft_strjoin(remain, buffer);
+			free (temp);
+		}
 	}
-	//buffer = ft_strjoin(remain, buffer);
-	return (buffer);
+	return (remain);
 }
 
 char	*get_next_line(int fd)
 {
-	static int	i = 1;
+	char		*buffer;
 	char		*line;
-	static char	*remain;		// remain = 0x0
+	static char	*remain;
 
-	line = ft_strdup("");		// line = ""
-	if (remain == NULL)			// remain이 0x0일때만 실행해서 remain의 값을 유지한다.
-		remain = ft_strdup("");		// remain = ""
-	printf("80 REMAIN %d: %s\n", i++, remain);
-
-	while (ft_strchr(remain, '\n') == NULL && remain != NULL)
+	if (fd < 0 || fd > 256)
+		return (NULL);
+	if (remain == NULL)
+		remain = ft_strdup("");
+	if (remain == NULL)
+		return (NULL);
+	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (buffer == NULL)
+		return (NULL);
+	remain = read_line(fd, buffer, remain);
+	if (remain == NULL)
 	{
-		printf("NO\\n -> read_line\n");
-		line = ft_strjoin(line, remain);	// line = abc\nde\nf
-		if (line == NULL)
-			return (NULL);
-		printf("89 line : %s\n", line);
-		remain = read_line(fd, remain);	// remain = abc\nde\nf
-		printf("91 remain : %s\n", remain);
+		free(remain);
+		return (NULL);
 	}
-	if (ft_strchr(remain, '\n') != NULL || remain == NULL)		// remain = abc\nde\nf
+	free(buffer);
+	buffer = NULL;
+	line = until_newline(remain);
+	if (line == NULL)
 	{
-		printf("got\\n\n");
-		line = ft_strjoin(line, before(remain));	// line = abc\n
-		printf("99 line : %s\n", line);
-		remain = after(remain);	// remain = de\nf
-		printf("101 remain : %s\n", remain);
-		//temp = remain;			// temp = de\nf
-		return (line);			// line = abc\n, remain = de\nf
+		free(remain);
+		remain = NULL;
+		return (NULL);
 	}
-	printf("remain before returning NULL : %s\n", remain);
-	return (NULL);
-}
-
-int	main(void)
-{
-	int		fd;
-	char	*line;
-	int	i = 1;
-	fd = open("test.txt", O_RDONLY);
-	line = get_next_line(fd);
-	printf("GNL%d : %s\n", i++, line);
-	line = get_next_line(fd);
-	printf("GNL%d : %s\n", i++, line);
-	line = get_next_line(fd);
-	printf("GNL%d : %s\n", i++, line);
-	line = get_next_line(fd);
-	printf("GNL%d : %s\n", i++, line);
-	line = get_next_line(fd);
-	printf("GNL%d : %s\n", i++, line);
-	line = get_next_line(fd);
-	printf("GNL%d : %s\n", i++, line);
-	return 0;
+	remain = after_newline(remain);
+	if (remain == NULL)
+	{
+		free(line);
+		return (NULL);
+	}
+	return (line);
 }
