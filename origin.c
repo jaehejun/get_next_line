@@ -50,12 +50,12 @@ char	*read_line(int fd)
 	char	*buffer;
 	int		count;
 	
-	buffer = (char *)malloc(sizeof(char)*BUFFER_SIZE + 1);
+	buffer = (char *)malloc(sizeof(char)* (BUFFER_SIZE + 1));
 	if (buffer == NULL)
 		return (NULL);
 	count = read(fd, buffer, BUFFER_SIZE);
 	if (count == -1)
-		return("");
+		return(""); // NULL
 	if (count == 0)
 		return (NULL);
 	buffer[count] = '\0';
@@ -68,6 +68,8 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*remain;
 
+	if (fd < 0 || fd > 256)
+		return (NULL);
 	if (remain == NULL)
 		remain = ft_strdup("");
 	if (remain == NULL)
@@ -107,30 +109,30 @@ char	*get_next_line(int fd)
 	return (NULL);
 }
 
-int	main(void)
-{
-	int		fd;
-	char	*line;
-	int	i = 1;
-	fd = open("test.txt", O_RDONLY);
-	printf("----------------------------------1st GNL-------------------------------------\n");
-	line = get_next_line(fd);
-	printf("GNL%d : %s\n", i++, line);
-	printf("----------------------------------2nd GNL-------------------------------------\n");
-	line = get_next_line(fd);
-	printf("GNL%d : %s\n", i++, line);
-	printf("----------------------------------3rd GNL-------------------------------------\n");
-	line = get_next_line(fd);
-	printf("GNL%d : %s\n", i++, line);
-	printf("----------------------------------4th GNL-------------------------------------\n");
-	line = get_next_line(fd);
-	printf("GNL%d : %s\n", i++, line);
-	printf("----------------------------------5th GNL-------------------------------------\n");
-	line = get_next_line(fd);
-	printf("GNL%d : %s\n", i++, line);
-	printf("----------------------------------6th GNL-------------------------------------\n");
-	line = get_next_line(fd);
-	printf("GNL%d : %s\n", i++, line);
-	printf("----------------------------------7th GNL-------------------------------------\n");
-	return 0;
-}
+//int	main(void)
+//{
+//	int		fd;
+//	char	*line;
+//	int	i = 1;
+//	fd = open("test.txt", O_RDONLY);
+//	printf("----------------------------------1st GNL-------------------------------------\n");
+//	line = get_next_line(fd);
+//	printf("GNL%d : %s\n", i++, line);
+//	printf("----------------------------------2nd GNL-------------------------------------\n");
+//	line = get_next_line(fd);
+//	printf("GNL%d : %s\n", i++, line);
+//	printf("----------------------------------3rd GNL-------------------------------------\n");
+//	line = get_next_line(fd);
+//	printf("GNL%d : %s\n", i++, line);
+//	printf("----------------------------------4th GNL-------------------------------------\n");
+//	line = get_next_line(fd);
+//	printf("GNL%d : %s\n", i++, line);
+//	printf("----------------------------------5th GNL-------------------------------------\n");
+//	line = get_next_line(fd);
+//	printf("GNL%d : %s\n", i++, line);
+//	printf("----------------------------------6th GNL-------------------------------------\n");
+//	line = get_next_line(fd);
+//	printf("GNL%d : %s\n", i++, line);
+//	printf("----------------------------------7th GNL-------------------------------------\n");
+//	return 0;
+//}

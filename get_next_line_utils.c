@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:35 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/06/12 17:05:22 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/02 19:29:40 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,20 @@ char	*ft_strdup(const char *s1)
 {
 	char	*copy;
 	size_t	memsize;
+	int		i;
 
+	i = 0;
 	memsize = ft_strlen(s1);
 	copy = (char *)malloc(sizeof(char) * (memsize + 1));
-	if (copy == 0)
+	if (copy == NULL)
 		return (NULL);
-	while (*s1 != '\0')
-		*copy++ = *s1++;
-	*copy = '\0';
-	return (copy - memsize);
+	while (s1[i] != '\0')
+	{
+		copy[i] = s1[i];
+		i++;
+	}
+	copy[i] = '\0';
+	return (copy);
 }
 
 char	*ft_strchr(const char *s, char c)

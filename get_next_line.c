@@ -6,92 +6,90 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/07/01 22:02:52 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/02 19:44:59 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	free_remain(char *remain)
-{
-	free(remain);
-	remain = NULL;
-}
-
 char	*until_newline(char *str)
 {
 	char	*before;
 	int		i;
-	int		len;
 
-	len = 0;
-	while (str[len] != '\0')
+	if (str == NULL)
+		return (NULL);
+	i = 0;
+	if (str[i] == '\0')
+		return (str);
+	while (str[i] != '\0')
 	{
-		len++;
-		if (str[len] == '\n')
+		if (str[i] == '\n')
 			break;
+		i++;
 	}
-	before = (char *)malloc(sizeof(char) * (len + 2));
+	str[i + 1] = '\0';
+	before = ft_strdup(str);
 	if (before == NULL)
 		return (NULL);
-	before[len + 2] = '\0';
-	i = 0;
-	while (*str != '\0')
-	{
-		before[i++] = *str++;
-		if (*(str - 1) == '\n')
-			break ;
-	}
 	return (before);
 }
 
 char	*after_newline(char *str)
 {
 	char	*after;
-	int		len;
+	int		i;
 
-	len = 0;
-	while (str[len] != '\0')
+	if (str == NULL)
+		return (NULL);
+	i = 0;
+	while (str[i] != '\0')
 	{
-		len++;
-		if (str[len] == '\n')
+		i++;
+		if (str[i] == '\n')
 			break;
 	}
-	after = ft_strdup(&str[len + 1]);
+	after = ft_strdup(&str[i + 1]);
 	if (after == NULL)
 		return (NULL);
 	return (after);
 }
 
-char	*read_line(int fd, char *buffer, char *remain)
+char	*read_line(int fd, char *remain)
 {
-	int	count;
+	char	*before_remain;
+	char	*buffer;
+	int		count;
 	
-	while (ft_strchr(remain, '\n') == NULL)
+	buffer = (char *)malloc(sizeof(char)* (BUFFER_SIZE + 1));
+	if (buffer == NULL)
+		return (NULL);
+	count = 1;
+	while (count != 0 && ft_strchr(remain, '\n') == NULL)
 	{
 		count = read(fd, buffer, BUFFER_SIZE);
 		if (count == -1)
 		{
-			free(remain);
-			remain = NULL;
-			return (NULL);
+			free(buffer);
+			return(NULL);
 		}
-		if (count == 0)
+		buffer[count] = '\0';
+		before_remain = remain;
+		remain = ft_strjoin(before_remain, buffer);
+		if (remain == NULL)
 			return (NULL);
-		else
-		{
-			char *temp = remain;
-			remain = ft_strjoin(remain, buffer);
-			free (temp);
-		}
+		free(before_remain);
+		before_remain = NULL;
 	}
-	return (remain);
+	free(buffer);
+	buffer = NULL;
+	return(remain);
 }
 
 char	*get_next_line(int fd)
 {
-	char		*buffer;
 	char		*line;
+	char		*temp;
 	static char	*remain;
 
 	if (fd < 0 || fd > 256)
@@ -100,18 +98,16 @@ char	*get_next_line(int fd)
 		remain = ft_strdup("");
 	if (remain == NULL)
 		return (NULL);
-	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (buffer == NULL)
-		return (NULL);
-	remain = read_line(fd, buffer, remain);
+	remain = read_line(fd, remain);
 	if (remain == NULL)
 	{
 		free(remain);
 		return (NULL);
 	}
-	free(buffer);
-	buffer = NULL;
-	line = until_newline(remain);
+	temp = ft_strdup(remain);
+	line = until_newline(temp);
+	free (temp);
+	temp = NULL;
 	if (line == NULL)
 	{
 		free(remain);
@@ -120,9 +116,34 @@ char	*get_next_line(int fd)
 	}
 	remain = after_newline(remain);
 	if (remain == NULL)
-	{
-		free(line);
 		return (NULL);
-	}
 	return (line);
 }
+
+//int	main(void)
+//{
+//	int		fd;
+//	char	*line;
+//	int	i = 1;
+//	fd = open("test.txt", O_RDONLY);
+//	printf("----------------------------------1st GNL-------------------------------------\n");
+//	line = get_next_line(fd);
+//	printf("GNL%d : %s\n", i++, line);
+//	printf("----------------------------------2nd GNL-------------------------------------\n");
+//	line = get_next_line(fd);
+//	printf("GNL%d : %s\n", i++, line);
+//	printf("----------------------------------3rd GNL-------------------------------------\n");
+//	line = get_next_line(fd);
+//	printf("GNL%d : %s\n", i++, line);
+//	printf("----------------------------------4th GNL-------------------------------------\n");
+//	line = get_next_line(fd);
+//	printf("GNL%d : %s\n", i++, line);
+//	printf("----------------------------------5th GNL-------------------------------------\n");
+//	line = get_next_line(fd);
+//	printf("GNL%d : %s\n", i++, line);
+//	printf("----------------------------------6th GNL-------------------------------------\n");
+//	line = get_next_line(fd);
+//	printf("GNL%d : %s\n", i++, line);
+//	printf("----------------------------------7th GNL-------------------------------------\n");
+//	return 0;
+//}
