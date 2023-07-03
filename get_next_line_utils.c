@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:35 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/07/02 19:29:40 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/03 19:50:40 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,55 +24,64 @@ size_t	ft_strlen(const char *s)
 
 char	*ft_strdup(const char *s1)
 {
-	char	*copy;
-	size_t	memsize;
+	char	*dup;
+	int		len;
 	int		i;
 
-	i = 0;
-	memsize = ft_strlen(s1);
-	copy = (char *)malloc(sizeof(char) * (memsize + 1));
-	if (copy == NULL)
+	len = ft_strlen(s1);
+	dup = (char *)malloc(sizeof(char) * (len + 1));
+	if (dup == NULL)
 		return (NULL);
+	i = 0;
 	while (s1[i] != '\0')
 	{
-		copy[i] = s1[i];
+		dup[i] = s1[i];
 		i++;
 	}
-	copy[i] = '\0';
-	return (copy);
+	dup[i] = '\0';
+	return (dup);
 }
 
 char	*ft_strchr(const char *s, char c)
 {
-	size_t	len;
-
-	len = ft_strlen(s) + 1;
-	while (len-- > 0)
+	while (*s != '\0')
 	{
 		if (*s == (char)c)
 			return ((char *)s);
 		s++;
 	}
+	if (*s == (char)c)
+		return ((char *)s);
 	return (NULL);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*join;
-	size_t	len1;
-	size_t	len2;
+	int		len1;
+	int		len2;
 	int		i;
+	int		j;
 
+	if (s1 == NULL || s2 == NULL)
+		return (NULL);
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
 	join = (char *)malloc(sizeof(char) * (len1 + len2 + 1));
-	if (join == 0)
+	if (join == NULL)
 		return (NULL);
 	i = 0;
-	while (len1-- > 0)
-		join[i++] = *s1++;
-	while (len2-- > 0)
-		join[i++] = *s2++;
-	join[i] = '\0';
+	while (i < len1)
+	{
+		join[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (j < len2)
+	{
+		join[i + j] = s2[j];
+		j++;
+	}
+	join[i + j] = '\0';
 	return (join);
 }
