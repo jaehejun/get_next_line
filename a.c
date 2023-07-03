@@ -139,15 +139,15 @@ int main(void)
     return 0;
 }
 
-Invalid fd          : 1.OK 2.OK 3.OK 4_LEAKS.KO
-empty.txt           : 1.KO Abort
-1char.txt           : 1.KO Abort
-one_line_no_nl.txt  : 1.KO Abort
-only_nl.txt         : 1.KO Abort
-multiple_nl.txt     : 1.OK 2.OK 3.KO Abort
-variable_nls.txt    : 1.OK 2.KO 3.KO 4.OK 5.KO 6.OK 7.KO Abort
-lines_around_10.txt : 1.OK 2.OK 3.OK 4.OK 5.OK 6.KO Abort
-giant_line.txt      : 1.KO Abort
-giant_line_nl.txt   : 1.OK 2.KO Abort
-read_error.txt      : 1.OK 2.OK 3.KO Abort
-stdin               : 1.OK 2.OK 3.OK 4.OK 5.OK 6.KO Abort
+//Invalid fd          : 1.OK 2.OK 3.OK 4_LEAKS.KO
+//empty.txt           : 1.KO Abort
+//1char.txt           : 1.KO Abort
+//one_line_no_nl.txt  : 1.KO Abort
+//only_nl.txt         : 1.KO Abort
+//multiple_nl.txt     : 1.OK 2.OK 3.KO Abort
+//variable_nls.txt    : 1.OK 2.KO 3.KO 4.OK 5.KO 6.OK 7.KO Abort
+//lines_around_10.txt : 1.OK 2.OK 3.OK 4.OK 5.OK 6.KO Abort
+//giant_line.txt      : 1.KO Abort
+//giant_line_nl.txt   : 1.OK 2.KO Abort
+//read_error.txt      : 1.OK 2.OK 3.KO Abort
+//stdin               : 1.OK 2.OK 3.OK 4.OK 5.OK 6.KO Abort

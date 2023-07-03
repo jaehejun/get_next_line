@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/07/03 23:01:47 by jaehejun         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "get_next_line.h"
 
 //void	free_memory(char *str)
@@ -67,9 +55,9 @@ char	*read_line(int fd, char *remain)
 	while (count != 0 && ft_strchr(remain, '\n') == NULL)
 	{
 		buffer = (char *)malloc(sizeof(char)* (BUFFER_SIZE + 1));
-		if (buffer == NULL)	// buffer malloc error
+		if (buffer == NULL)
 			return (NULL);
-		count = read(fd, buffer, BUFFER_SIZE);	//buffer에 BFSIZE만큼 read한 값 저장
+		count = read(fd, buffer, BUFFER_SIZE);
 		if (count == -1) // Error
 		{
 			free(buffer);
@@ -81,20 +69,17 @@ char	*read_line(int fd, char *remain)
 		else
 		{
 			buffer[count] = '\0';
-			temp = remain;		// temp에 original remain 저장
-			remain = ft_strjoin(remain, buffer);	//strjoin이 새로운 주소에 remain + buffer를 저장
-			if (remain == NULL)	// remain malloc error
+			temp = remain;
+			remain = ft_strjoin(remain, buffer);
+			if (remain == NULL)
 			{
-				free(temp);	// original remain free
-				temp = NULL;	// original remain NULL 이 필요한가??
-				free(buffer);	// buffer free
-				//buffer = NULL;	// buffer NULL 이 필요한가??
+				free(temp);
+				free(buffer);
 				return (NULL);
 			}
-			free(temp);	// original remain free
-			//temp = NULL;	// 필요한가??
-			free(buffer);	// buffer free
-			//buffer = NULL;	// 필요한가??
+			free(temp);
+			free(buffer);
+			buffer = NULL;
 		}
 	}
 	free(buffer);
@@ -114,12 +99,11 @@ char	*get_next_line(int fd)
 		remain = ft_strdup("");
 	if (remain == NULL)
 		return (NULL);
-	temp = remain;	// temp에 original remain 저장
-	remain = read_line(fd, remain);
-	if (remain == NULL || remain[0] == '\0')	// read_line error or empty file
+	temp = read_line(fd, remain);
+	if (temp == NULL)
 	{
-		free(temp);
-		temp = NULL;
+		free(remain);
+		remain = NULL;
 		return (NULL);
 	}
 	
