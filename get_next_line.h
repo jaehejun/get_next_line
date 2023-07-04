@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:16 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/07/03 18:49:36 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/04 17:58:21 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 8
+#  define BUFFER_SIZE 5
 # endif
 
 # include <stdlib.h>
@@ -29,8 +29,8 @@ char	*ft_strchr(const char *s, char c);
 char	*ft_strjoin(char const *s1, char const *s2);
 
 char	*get_next_line(int fd);
-char	*read_line(int fd, char *remain);
-char	*until_newline(char *str);
-char	*after_newline(char *str);
+char	*read_line(int fd, char *buffer, char *remain);
+char	*make_line(char *line);
+char	*make_remain(char *line);
 
 #endif
