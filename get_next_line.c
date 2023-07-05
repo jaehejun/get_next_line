@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/07/05 16:24:01 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/05 17:03:59 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ char	*make_remain(char *temp)
 
 char	*read_line(int fd, char *buffer, char *remain)
 {
+	char	*temp_remain;
 	int		count;
-	char	*temp;
 
 	if (remain == NULL)
 		remain = ft_strdup("");
@@ -83,21 +83,17 @@ char	*read_line(int fd, char *buffer, char *remain)
 		count = read(fd, buffer, BUFFER_SIZE);
 		if (count == -1)
 		{
-			free(remain);
+			free_memory(remain);
 			return (NULL);
 		}
 		if (count == 0)
 			break ;
 		buffer[count] = '\0';
-		temp = remain;
+		temp_remain = remain;
 		remain = ft_strjoin(remain, buffer);
-		free(temp);
-		temp = NULL;
+		free_memory(temp_remain);
 		if (remain == NULL)
-		{
-			free(temp);
 			return (NULL);
-		}
 	}
 	return (remain);
 }
@@ -116,10 +112,12 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = read_line(fd, buffer, remain);
 	free_memory(buffer);
-	if (line == NULL)
+	if (line == NULL || line[0] == '\0')
+	{
+		if (remain != NULL)
+			free_memory(remain);
 		return (NULL);
-	if (line[0] == '\0')
-		return (NULL);
+	}
 	temp = line;
 	line = make_line(line);
 	if (line == NULL)
@@ -130,11 +128,10 @@ char	*get_next_line(int fd)
 	remain = make_remain(temp);
 	if (remain == NULL)
 	{
-		free(line);
-		free(temp);
+		free_memory(line);
+		free_memory(temp);
 		return (NULL);
 	}
-	free(temp);
-	temp = NULL;
+	free_memory(temp);
 	return (line);
 }
