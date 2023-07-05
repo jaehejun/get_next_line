@@ -1,5 +1,32 @@
 #include "get_next_line.h"
 
+static char *read_file(int fd, char **remain, char *buffer, int count_read)
+{
+    char    *temp_remain;
+    while (count_read)
+    {
+        count_read = read(fd, buffer, BUFFER_SIZE);
+        if (count_read == 0)
+            break ;
+        if (count_read == -1)
+            return (NULL);
+        buffer[count_read] = '\0';
+        if (*remain == NULL)
+            *remain = ft_strdup("");
+        if (*remain == NULL)
+            return (NULL);
+        temp_remain = *remain;
+        *remain = ft_strjoin(temp_remain, buffer);
+        free(temp_remain);
+        temp_remain = NULL;
+        if (*remain == NULL)
+            return (NULL);
+        if (ft_strchr(*remain, '\n') != NULL)
+            return (*remain);
+    }
+    return (*remain);
+}
+
 char	*until_newline(char *str)
 {
 	char	*before;
