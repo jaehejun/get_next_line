@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/07/05 16:15:19 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/05 16:24:01 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,24 +86,19 @@ char	*read_line(int fd, char *buffer, char *remain)
 			free(remain);
 			return (NULL);
 		}
-		else if (count == 0)
+		if (count == 0)
 			break ;
-		else
+		buffer[count] = '\0';
+		temp = remain;
+		remain = ft_strjoin(remain, buffer);
+		free(temp);
+		temp = NULL;
+		if (remain == NULL)
 		{
-			buffer[count] = '\0';
-			temp = remain;
-			remain = ft_strjoin(remain, buffer);
 			free(temp);
-			temp = NULL;
-			if (remain == NULL)
-			{
-				free(temp);
-				return (NULL);
-			}
+			return (NULL);
 		}
 	}
-	free(buffer);
-	buffer = NULL;
 	return (remain);
 }
 
@@ -120,16 +115,11 @@ char	*get_next_line(int fd)
 	if (buffer == NULL)
 		return (NULL);
 	line = read_line(fd, buffer, remain);
+	free_memory(buffer);
 	if (line == NULL)
-	{
-		free(buffer);
 		return (NULL);
-	}
 	if (line[0] == '\0')
-	{
-		free(buffer);
 		return (NULL);
-	}
 	temp = line;
 	line = make_line(line);
 	if (line == NULL)
