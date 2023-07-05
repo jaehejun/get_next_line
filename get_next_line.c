@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/07/05 17:18:41 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/05 23:15:23 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ char	*get_next_line(int fd)
 	free_memory(buffer);
 	if (line == NULL || line[0] == '\0')
 	{
+		//free_memory(line);
 		if (remain != NULL)
 			free_memory(remain);
 		return (NULL);
