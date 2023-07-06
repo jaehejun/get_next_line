@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/07/06 15:11:47 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/06 16:04:55 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,12 +81,12 @@ char	*read_line(int fd, char *buffer, char *remain)
 	if (remain == NULL)
 		return (NULL);
 	count = 0;
-	//while (count != 0 && strchr(remain, '\n') == NULL)
 	while (1)
 	{
 		count = read(fd, buffer, BUFFER_SIZE);
 		if (count == -1)
 			return (free_memory(remain));
+			// 여기서 remain = NULL해도 get_next_line의 remain은 NULL로 바뀌지 않음
 		if (count == 0)
 			break ;
 		buffer[count] = '\0';
@@ -115,15 +115,17 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = read_line(fd, buffer, remain);
 	free_memory(buffer);
-	if (!line)
+	if (line == NULL)
+	{
+		if (remain != NULL)
+			remain = NULL; // read_line()에서 remain = NULL해도 get_next_line의 remain은 NULL로 바뀌지 않음
 		return (NULL);
+	}
+	remain = NULL; // read_line()에서 remain = NULL해도 get_next_line의 remain은 NULL로 바뀌지 않음
 	temp = line;
 	line = make_line(line);
 	if (line == NULL)
-	{
-		free(temp);
-		return (NULL);
-	}
+		return(free_memory(temp));
 	remain = make_remain(temp);
 	if (remain == NULL)
 	{
