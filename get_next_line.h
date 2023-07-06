@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:16 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/07/05 16:44:57 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/06 18:28:26 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,16 @@
 # endif
 
 # include <stdlib.h>
-# include <unistd.h>
-# include <stdio.h>
-# include <string.h>
-# include <fcntl.h>
 
 size_t	ft_strlen(const char *s);
 char	*ft_strdup(const char *s1);
 char	*ft_strchr(const char *s, char c);
 char	*ft_strjoin(char const *s1, char const *s2);
 
-void	free_memmory(char *str);
+char	*free_memory(char *allocated);
 char	*get_next_line(int fd);
 char	*read_line(int fd, char *buffer, char *remain);
-char	*make_line(char *line);
-char	*make_remain(char *line);
+char	*make_line(char *temp);
+char	*make_remain(char *temp);
 
 #endif

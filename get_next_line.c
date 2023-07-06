@@ -6,10 +6,13 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/07/06 16:04:55 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/06 23:00:27 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include "get_next_line.h"
 
 char	*free_memory(char *allocated)
@@ -95,7 +98,7 @@ char	*read_line(int fd, char *buffer, char *remain)
 		free_memory(temp_remain);
 		if (remain == NULL)
 			return (NULL);
-		if (strchr(remain, '\n'))
+		if (ft_strchr(remain, '\n'))
 			break ;
 	}
 	return (remain);
@@ -138,34 +141,41 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
+
 //int	main(void)
 //{
-//	int		fd;
+//	int		fd1;
+//	int		fd2;
 //	char	*line;
-//	//int	i = 1;
 	
-//	fd = open("test.txt", O_RDONLY);
-//	line = get_next_line(fd);
-//	printf("%p %s\n", line, line);
-//	system("leaks a.out");
-//	//printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@1st GNL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
-//	//line = get_next_line(fd);
-//	//printf("GNL%d : %s\n", i++, line);
-//	//printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2nd GNL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
-//	//line = get_next_line(fd);
-//	//printf("GNL%d : %s\n", i++, line);
-//	//printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@3rd GNL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
-//	//line = get_next_line(fd);
-//	//printf("GNL%d : %s\n", i++, line);
-//	//printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@4th GNL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
-//	//line = get_next_line(fd);
-//	//printf("GNL%d : %s\n", i++, line);
-//	//printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@5th GNL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
-//	//line = get_next_line(fd);
-//	//printf("GNL%d : %s\n", i++, line);
-//	//printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@6th GNL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
-//	//line = get_next_line(fd);
-//	//printf("GNL%d : %s\n", i++, line);
-//	//printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@7th GNL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+//	fd1 = open("test.txt", O_RDONLY);
+	//fd2 = open("test2.txt", O_RDONLY);
+	//while ((line = get_next_line(fd1)) != NULL)
+	//{
+	//	printf("%s", line);
+	//}
+	//printf("gnl returns NULL\n");
+	
+	//printf("%s", get_next_line(fd1));
+	//close(fd1);
+	//printf("%s", get_next_line(fd2));
+	//close(fd2);
+	//printf("%s", get_next_line(0));
+	//printf("%s", NULL);
+//	return (0);
+//}
+
+//int	main(void)
+//{
+//	int	fd = 0;
+//	char	*line;
+	
+//	while ((line = get_next_line(fd)) != NULL)
+//	{
+//		printf("%s\n", line);
+//	}
+//	if (line == NULL)
+//		printf("GNL returns NULL in STDIN\n");
+//	close(fd);
 //	return 0;
 //}
