@@ -6,16 +6,17 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/07/05 23:15:23 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/06 15:11:47 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	free_memory(char *allocated)
+char	*free_memory(char *allocated)
 {
 	free(allocated);
-	allocated = NULL;
+	allocated = NULL; 
+	return (allocated);
 }
 
 char	*make_line(char *line)
@@ -25,6 +26,8 @@ char	*make_line(char *line)
 	int		i;
 
 	len = 0;
+	if (line[0] == '\0')
+		return (NULL);
 	while (line[len] != '\0')
 	{
 		if (line[len] == '\n')
@@ -77,23 +80,23 @@ char	*read_line(int fd, char *buffer, char *remain)
 		remain = ft_strdup("");
 	if (remain == NULL)
 		return (NULL);
-	count = 1;
-	while (count != 0 && strchr(remain, '\n') == NULL)
+	count = 0;
+	//while (count != 0 && strchr(remain, '\n') == NULL)
+	while (1)
 	{
 		count = read(fd, buffer, BUFFER_SIZE);
 		if (count == -1)
-		{
-			free_memory(remain);
-			return (NULL);
-		}
+			return (free_memory(remain));
 		if (count == 0)
 			break ;
 		buffer[count] = '\0';
 		temp_remain = remain;
-		remain = ft_strjoin(remain, buffer);
+		remain = ft_strjoin(temp_remain, buffer);
 		free_memory(temp_remain);
 		if (remain == NULL)
 			return (NULL);
+		if (strchr(remain, '\n'))
+			break ;
 	}
 	return (remain);
 }
@@ -112,13 +115,8 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = read_line(fd, buffer, remain);
 	free_memory(buffer);
-	if (line == NULL || line[0] == '\0')
-	{
-		//free_memory(line);
-		if (remain != NULL)
-			free_memory(remain);
+	if (!line)
 		return (NULL);
-	}
 	temp = line;
 	line = make_line(line);
 	if (line == NULL)
@@ -134,5 +132,38 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	free_memory(temp);
+	//system("leaks a.out");
 	return (line);
 }
+
+//int	main(void)
+//{
+//	int		fd;
+//	char	*line;
+//	//int	i = 1;
+	
+//	fd = open("test.txt", O_RDONLY);
+//	line = get_next_line(fd);
+//	printf("%p %s\n", line, line);
+//	system("leaks a.out");
+//	//printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@1st GNL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+//	//line = get_next_line(fd);
+//	//printf("GNL%d : %s\n", i++, line);
+//	//printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2nd GNL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+//	//line = get_next_line(fd);
+//	//printf("GNL%d : %s\n", i++, line);
+//	//printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@3rd GNL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+//	//line = get_next_line(fd);
+//	//printf("GNL%d : %s\n", i++, line);
+//	//printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@4th GNL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+//	//line = get_next_line(fd);
+//	//printf("GNL%d : %s\n", i++, line);
+//	//printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@5th GNL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+//	//line = get_next_line(fd);
+//	//printf("GNL%d : %s\n", i++, line);
+//	//printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@6th GNL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+//	//line = get_next_line(fd);
+//	//printf("GNL%d : %s\n", i++, line);
+//	//printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@7th GNL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+//	return 0;
+//}
