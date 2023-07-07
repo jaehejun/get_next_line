@@ -1,3 +1,0 @@
-this is test2 file
-
-fd changed before test.txt reached EOF
