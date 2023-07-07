@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/07/07 15:47:35 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/07 16:26:02 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 char	*free_memory(char *allocated)
 {
 	free(allocated);
-	allocated = NULL; 
+	allocated = NULL;
 	return (allocated);
 }
 
@@ -71,22 +71,24 @@ char	*make_remain(char *temp_read)
 	return (new_remain);
 }
 
-char	*read_line(int fd, char *buffer, char *remain)
+char	*read_line(int fd, char *remain)
 {
+	char	*buffer;
 	char	*temp_remain;
 	int		count;
 
-	if (remain == NULL)
-		remain = ft_strdup("");
-	if (remain == NULL)
+	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (buffer == NULL)
 		return (NULL);
 	count = 0;
 	while (1)
 	{
 		count = read(fd, buffer, BUFFER_SIZE);
 		if (count == -1)
+		{
+			free_memory(buffer);
 			return (free_memory(remain));
-			// 여기서 remain = NULL해도 get_next_line의 remain은 NULL로 바뀌지 않음
+		}
 		if (count == 0)
 			break ;
 		buffer[count] = '\0';
@@ -94,10 +96,14 @@ char	*read_line(int fd, char *buffer, char *remain)
 		remain = ft_strjoin(temp_remain, buffer);
 		free_memory(temp_remain);
 		if (remain == NULL)
-			return (NULL);
+		{
+			free_memory(buffer);
+			return (free_memory(remain));
+		}
 		if (ft_strchr(remain, '\n'))
 			break ;
 	}
+	free_memory(buffer);
 	return (remain);
 }
 
@@ -105,27 +111,22 @@ char	*get_next_line(int fd)
 {
 	static char	*remain;
 	char		*line;
-	char		*buffer;
 	char		*temp_read;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (buffer == NULL)
-		return (NULL);
-	line = read_line(fd, buffer, remain);
-	free_memory(buffer);
+	line = read_line(fd, remain);
 	if (line == NULL)
 	{
 		if (remain != NULL)
-			remain = NULL; // read_line()에서 remain = NULL해도 get_next_line의 remain은 NULL로 바뀌지 않음
+			remain = NULL;
 		return (NULL);
 	}
-	remain = NULL; // read_line()에서 remain = NULL해도 get_next_line의 remain은 NULL로 바뀌지 않음
+	remain = NULL;
 	temp_read = line;
 	line = make_line(line);
 	if (line == NULL)
-		return(free_memory(temp_read));
+		return (free_memory(temp_read));
 	remain = make_remain(temp_read);
 	if (remain == NULL)
 	{
@@ -134,6 +135,5 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	free_memory(temp_read);
-	//system("leaks a.out");
 	return (line);
 }

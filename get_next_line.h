@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:16 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/07/07 15:45:37 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/07 16:21:59 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*ft_strjoin(char const *s1, char const *s2);
 
 char	*free_memory(char *allocated);
 char	*get_next_line(int fd);
-char	*read_line(int fd, char *buffer, char *remain);
+char	*read_line(int fd, char *remain);
 char	*make_line(char *temp_read);
 char	*make_remain(char *temp_read);
 
