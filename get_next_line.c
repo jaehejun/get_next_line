@@ -6,31 +6,37 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/07/07 16:26:02 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/07 18:53:10 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*free_memory(char *allocated)
+char	*free_memory(char *allocated1, char *allocated2)
 {
-	free(allocated);
-	allocated = NULL;
-	return (allocated);
+	if (allocated1 != NULL)
+	{
+		free(allocated1);
+		allocated1 = NULL;
+	}
+	if (allocated2 != NULL)
+	{
+		free(allocated2);
+		allocated2 = NULL;
+	}
+	return (NULL);
 }
 
-char	*make_line(char *line)
+char	*make_line(char *temp_read)
 {
 	char	*new_line;
 	int		len;
 	int		i;
 
 	len = 0;
-	if (line[0] == '\0')
-		return (NULL);
-	while (line[len] != '\0')
+	while (temp_read[len] != '\0')
 	{
-		if (line[len] == '\n')
+		if (temp_read[len] == '\n')
 		{
 			len++;
 			break ;
@@ -44,7 +50,7 @@ char	*make_line(char *line)
 	i = 0;
 	while (len-- > 0)
 	{
-		new_line[i] = line[i];
+		new_line[i] = temp_read[i];
 		i++;
 	}
 	return (new_line);
@@ -80,30 +86,23 @@ char	*read_line(int fd, char *remain)
 	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (buffer == NULL)
 		return (NULL);
-	count = 0;
 	while (1)
 	{
 		count = read(fd, buffer, BUFFER_SIZE);
 		if (count == -1)
-		{
-			free_memory(buffer);
-			return (free_memory(remain));
-		}
+			return (free_memory(buffer, remain));
 		if (count == 0)
 			break ;
 		buffer[count] = '\0';
 		temp_remain = remain;
 		remain = ft_strjoin(temp_remain, buffer);
-		free_memory(temp_remain);
+		free_memory(temp_remain, NULL);
 		if (remain == NULL)
-		{
-			free_memory(buffer);
-			return (free_memory(remain));
-		}
+			return (free_memory(buffer, remain));
 		if (ft_strchr(remain, '\n'))
 			break ;
 	}
-	free_memory(buffer);
+	free_memory(buffer, NULL);
 	return (remain);
 }
 
@@ -124,16 +123,14 @@ char	*get_next_line(int fd)
 	}
 	remain = NULL;
 	temp_read = line;
+	if (temp_read[0] == '\0')
+		return (free_memory(line, NULL));
 	line = make_line(line);
 	if (line == NULL)
-		return (free_memory(temp_read));
+		return (free_memory(temp_read, NULL));
 	remain = make_remain(temp_read);
 	if (remain == NULL)
-	{
-		free_memory(line);
-		free_memory(temp_read);
-		return (NULL);
-	}
-	free_memory(temp_read);
+		return (free_memory(temp_read, line));
+	free_memory(temp_read, NULL);
 	return (line);
 }
