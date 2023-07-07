@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:35 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/07/06 16:01:24 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/07 15:48:01 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
+	//if (s == NULL)
+	//	return (0);
 	i = 0;
 	while (s[i] != '\0')
 		i++;
@@ -63,8 +65,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		i;
 	int		j;
 
-	if (s1 == NULL || s2 == NULL)
-		return (NULL);
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
 	join = (char *)malloc(sizeof(char) * (len1 + len2 + 1));

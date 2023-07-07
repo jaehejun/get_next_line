@@ -6,13 +6,10 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 20:04:32 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/07/06 23:00:27 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/07/07 15:47:35 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
 #include "get_next_line.h"
 
 char	*free_memory(char *allocated)
@@ -53,22 +50,22 @@ char	*make_line(char *line)
 	return (new_line);
 }
 
-char	*make_remain(char *temp)
+char	*make_remain(char *temp_read)
 {
 	char	*new_remain;
 	int		i;
 
 	i = 0;
-	while (temp[i] != '\0')
+	while (temp_read[i] != '\0')
 	{
-		if (temp[i] == '\n')
+		if (temp_read[i] == '\n')
 		{
 			i++;
 			break ;
 		}
 		i++;
 	}
-	new_remain = ft_strdup(&temp[i]);
+	new_remain = ft_strdup(&temp_read[i]);
 	if (new_remain == NULL)
 		return (NULL);
 	return (new_remain);
@@ -109,7 +106,7 @@ char	*get_next_line(int fd)
 	static char	*remain;
 	char		*line;
 	char		*buffer;
-	char		*temp;
+	char		*temp_read;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
@@ -125,57 +122,18 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	remain = NULL; // read_line()에서 remain = NULL해도 get_next_line의 remain은 NULL로 바뀌지 않음
-	temp = line;
+	temp_read = line;
 	line = make_line(line);
 	if (line == NULL)
-		return(free_memory(temp));
-	remain = make_remain(temp);
+		return(free_memory(temp_read));
+	remain = make_remain(temp_read);
 	if (remain == NULL)
 	{
 		free_memory(line);
-		free_memory(temp);
+		free_memory(temp_read);
 		return (NULL);
 	}
-	free_memory(temp);
+	free_memory(temp_read);
 	//system("leaks a.out");
 	return (line);
 }
-
-
-//int	main(void)
-//{
-//	int		fd1;
-//	int		fd2;
-//	char	*line;
-	
-//	fd1 = open("test.txt", O_RDONLY);
-	//fd2 = open("test2.txt", O_RDONLY);
-	//while ((line = get_next_line(fd1)) != NULL)
-	//{
-	//	printf("%s", line);
-	//}
-	//printf("gnl returns NULL\n");
-	
-	//printf("%s", get_next_line(fd1));
-	//close(fd1);
-	//printf("%s", get_next_line(fd2));
-	//close(fd2);
-	//printf("%s", get_next_line(0));
-	//printf("%s", NULL);
-//	return (0);
-//}
-
-//int	main(void)
-//{
-//	int	fd = 0;
-//	char	*line;
-	
-//	while ((line = get_next_line(fd)) != NULL)
-//	{
-//		printf("%s\n", line);
-//	}
-//	if (line == NULL)
-//		printf("GNL returns NULL in STDIN\n");
-//	close(fd);
-//	return 0;
-//}
